@@ -1,6 +1,8 @@
 from collections.abc import Mapping
 from typing import Any, List, Optional, Sequence, Union
 
+import numpy
+
 import torch.utils.data
 from torch.utils.data.dataloader import default_collate
 
@@ -31,6 +33,8 @@ class Collater:
                 exclude_keys=self.exclude_keys,
             )
         elif isinstance(elem, torch.Tensor):
+            return default_collate(batch)
+        elif isinstance(elem, numpy.ndarray):
             return default_collate(batch)
         elif isinstance(elem, TensorFrame):
             return torch_frame.cat(batch, along='row')
